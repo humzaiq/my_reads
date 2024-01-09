@@ -11,6 +11,7 @@ state = {
         query: ' '
     },
     updatedResults: [],
+    error: null,
 }
 
 makeSearchRequest = event => {
@@ -20,41 +21,33 @@ makeSearchRequest = event => {
     }
     else {
         BooksAPI.search(query).then(res => {
-            this.setState ({ searchInfo: { query: query, results: res}})
-            //  this.updateShelf(res)
+            this.setState ({ searchInfo: { query: query }, updatedResults: res})
             return res
         })
         .then(res => this.updateShelf(res))
     }
 }
 
-// componentDidUpdate(prevProps, prevState){
-//     if (prevState.searchInfo.query !== this.state.searchInfo.query){
-//         this.updateShelf()
-//     }
-// }
-
 updateShelf = (res) => {
-    const searchResults = res
+    const searchResults = Array.isArray(res) ? res : []
     const results = searchResults.map(book => {
-         console.log('searcher', book)
 
         book.shelf = 'none'
-        this.props.myBooks.map(myBook => {  
+        this.props.myBooks.map(myBook => {
             if(book.id === myBook.id) {
                 book.shelf = myBook.shelf;
-                console.log('book', book)
+                // console.log('book', book)
             }
         })
         return book;
     })
 
-    console.log('results', results)
     this.setState({updatedResults:results})
 }
 
 render(){
-    const { showSearchPage, myBooks } = this.props
+    const { showSearchPage } = this.props
+    console.log("this.state.updatedResults", this.state.updatedResults)
 
     return(
         <div className="search-books">
@@ -71,14 +64,14 @@ render(){
                     However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                     you don't find a specific author or title. Every search is limited by search terms.
                     */}
-                    <input type= {this.state.query} 
+                    <input type= {this.state.query}
                       onChange = {(e) => {this.makeSearchRequest(e); }}
                       placeholder="Search by title or author"/>
                 </div>
             </div>
-            
+
             <div className="search-books-results">
-                {!Array.isArray(this.state.updatedResults) ?
+                {!Array.isArray(this.state.updatedResults) || this.state.updatedResults.length === 0  ?
                     (<div>
                     No results found
                     </div>
@@ -87,13 +80,13 @@ render(){
                         {this.state.updatedResults.map(book => {
                         return (
                             <li key ={book.id}>
-                                <Book 
+                                <Book
                                 imageURL={book.imageLinks}
                                 title={book.title}
                                 authors={book.authors}
                                 changeBookshelf={this.props.changeBookshelf}
                                 book={book}
-                                />  
+                                />
                             </li>)}
                         )}
                     </ol>
@@ -105,4 +98,3 @@ render(){
 }
 
 export default Search
-

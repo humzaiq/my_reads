@@ -4,9 +4,9 @@ import  { Link } from 'react-router-dom';
 
 class BookShelfContainer extends React.Component {
 
-  bookShelves = [{id: 1, type:'currentlyReading', name: 'Currently Reading'},
-  {id: 2, type:'read', name: 'Read'},
-  {id: 3, type:'wantToRead', name: 'Want to Read'},]
+  bookShelves =   [{id: 1, type:'currentlyReading', name: 'Currently Reading'},
+                  {id: 2, type:'read', name: 'Read'},
+                  {id: 3, type:'wantToRead', name: 'Want to Read'},]
 
 
     render(){
@@ -22,11 +22,11 @@ class BookShelfContainer extends React.Component {
                 {this.bookShelves.map(shelf => {
                   const bookByShelfName = books.filter(book => book.shelf === shelf.type);
                     return (
-                        <BookShelf 
+                        <BookShelf
                         key ={shelf.id}
-                        books = {bookByShelfName} 
+                        books = {bookByShelfName}
                         shelfTitle = {`${shelf.name}`}
-                        changeBookshelf = { this.props.changeBookshelf } 
+                        changeBookshelf = { this.props.changeBookshelf }
                         />
                     )}
                   )}
@@ -39,11 +39,10 @@ class BookShelfContainer extends React.Component {
             </div>
         </div>
       )
-        
+
     }
   }
 
 export default BookShelfContainer
 
 
-              
